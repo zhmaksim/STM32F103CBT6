@@ -38,6 +38,9 @@ static void pwr_disable_backup_protect(void);
  */
 void pwr_init(void)
 {
+    /* Включить тактирование */
+    SET_BIT(RCC->APB1ENR, RCC_APB1ENR_PWREN_Msk);
+
     pwr_disable_backup_protect();
 }
 /* ------------------------------------------------------------------------- */
