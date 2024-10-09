@@ -24,6 +24,7 @@
 #include "rcc.h"
 #include "afio.h"
 #include "gpio.h"
+#include "led.h"
 
 /* Private macros ---------------------------------------------------------- */
 
@@ -83,6 +84,8 @@ static void app_main(void * arg)
 
     while (true) {
         vTaskDelayUntil(&last_wake_time, frequency);
+
+        led_toggle(LED_BLUE);
 
         /* Обновить информацию об используемой памяти FreeRTOS */
         free_heap_size = xPortGetFreeHeapSize();

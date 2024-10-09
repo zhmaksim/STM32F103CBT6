@@ -17,7 +17,7 @@
 
 /* Includes ---------------------------------------------------------------- */
 
-#include "gpio.h"
+#include "led.h"
 
 /* Private macros ---------------------------------------------------------- */
 
@@ -27,39 +27,53 @@
 
 /* Private variables ------------------------------------------------------- */
 
-/* Private function prototypes --------------------------------------------- */
+static struct led led[LED_COUNT] = {
+    /* BLUE */
+    {
+        .gpio = GPIOB,
+        .pin = GPIO_ODR_ODR2,
+    },
+};
 
-static void gpio_led_init(void);
+/* Private function prototypes --------------------------------------------- */
 
 /* Private user code ------------------------------------------------------- */
 
 /**
- * @brief           Инициализировать GPIO
+ * @brief           Включить светодиод
+ *
+ * @param[in]       id: Идентификатор светодиода
  */
-void gpio_init(void)
+void led_on(int8_t id)
 {
-    /* Включить тактирование */
-    SET_BIT(RCC->APB2ENR, RCC_APB2ENR_IOPAEN_Msk);
-    SET_BIT(RCC->APB2ENR, RCC_APB2ENR_IOPBEN_Msk);
+    assert(id < LED_COUNT && id > LED_NONE);
 
-    gpio_led_init();
+    SET_BIT(led[id].gpio->BSRR, led[id].pin);
 }
 /* ------------------------------------------------------------------------- */
 
 /**
- * @brief           Инициализировать GPIO LED
+ * @brief           Выключить светодиод
+ *
+ * @param[in]       id: Идентификатор светодиода
  */
-static void gpio_led_init(void)
+void led_off(int8_t id)
 {
-    /* GPIOB2 LED_BLUE */
+    assert(id < LED_COUNT && id > LED_NONE);
 
-    /* Начальный уровень = Low */
-    CLEAR_BIT(GPIOB->ODR, GPIO_ODR_ODR2_Msk);
+    SET_BIT(led[id].gpio->BSRR, led[id].pin << 16);
+}
+/* ------------------------------------------------------------------------- */
 
-    /* Output Push-Pull 2MHz */
-    MODIFY_REG(GPIOB->CRL,
-               GPIO_CRL_MODE2_Msk
-             | GPIO_CRL_CNF2_Msk,
-               0x02 << GPIO_CRL_MODE2_Pos);
+/**
+ * @brief           Переключить состояние светодиода
+ *
+ * @param[in]       id: Идентификатор светодиода
+ */
+void led_toggle(int8_t id)
+{
+    assert(id < LED_COUNT && id > LED_NONE);
+
+    XOR_BIT(led[id].gpio->ODR, led[id].pin);
 }
 /* ------------------------------------------------------------------------- */
