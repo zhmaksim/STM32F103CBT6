@@ -19,6 +19,7 @@
 
 #include "stm32f103xb_it.h"
 #include "systick.h"
+#include "sensors.h"
 
 /* Private macros ---------------------------------------------------------- */
 
@@ -74,5 +75,11 @@ void systick_period_elapsed_callback(void)
     if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) {
         xPortSysTickHandler();
     }
+}
+/* ------------------------------------------------------------------------- */
+
+void DMA1_Channel1_IRQHandler(void)
+{
+    sensors_dma_it_handler();
 }
 /* ------------------------------------------------------------------------- */

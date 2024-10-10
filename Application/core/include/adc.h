@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STM32F103XB_IT_H_
-#define STM32F103XB_IT_H_
+#ifndef ADC_H_
+#define ADC_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,25 +30,24 @@ extern "C" {
 
 /* Exported constants ------------------------------------------------------ */
 
+#define ADC_EV_MEASURE_CPLT_Pos         1
+#define ADC_EV_MEASURE_CPLT_Msk         (0x01 << ADC_EV_MEASURE_CPLT_Pos)
+#define ADC_EV_MEASURE_CPLT             ADC_EV_MEASURE_CPLT_Msk
+
+#define ADC_EV_MEASURE_ERR_Pos          7
+#define ADC_EV_MEASURE_ERR_Msk          (0x01 << ADC_EV_MEASURE_ERR_Pos)
+#define ADC_EV_MEASURE_ERR              ADC_EV_MEASURE_ERR_Msk
+
 /* Exported types ---------------------------------------------------------- */
 
 /* Exported variables ------------------------------------------------------ */
 
+extern SemaphoreHandle_t adc1_mutex;
+extern EventGroupHandle_t adc1_event_group;
+
 /* Exported function prototypes -------------------------------------------- */
 
-void NMI_Handler(void);
-
-void HardFault_Handler(void);
-
-void MemManage_Handler(void);
-
-void BusFault_Handler(void);
-
-void UsageFault_Handler(void);
-
-void SysTick_Handler(void);
-
-void DMA1_Channel1_IRQHandler(void);
+void adc_init(void);
 
 /* Exported callback function prototypes ----------------------------------- */
 
@@ -56,4 +55,4 @@ void DMA1_Channel1_IRQHandler(void);
 }
 #endif /* __cplusplus */
 
-#endif /* STM32F103XB_IT_H_ */
+#endif /* ADC_H_ */

@@ -39,6 +39,10 @@ static void rcc_setup_pll(void);
 
 static void rcc_setup_bus(void);
 
+static void rcc_setup_adc(void);
+
+static void rcc_setup_usb(void);
+
 static void rcc_setup_clksource_cpu(void);
 
 static inline uint32_t rcc_tick(void);
@@ -53,6 +57,8 @@ void rcc_init(void)
     rcc_setup_hse();
     rcc_setup_pll();
     rcc_setup_bus();
+    rcc_setup_adc();
+    rcc_setup_usb();
     rcc_setup_clksource_cpu();
 }
 /* ------------------------------------------------------------------------- */
@@ -118,6 +124,28 @@ static void rcc_setup_bus(void)
 
     /* Делитель APB2 = /1 (72MHz / 1 = 72MHz) */
     CLEAR_BIT(RCC->CFGR, RCC_CFGR_PPRE2_Msk);
+}
+/* ------------------------------------------------------------------------- */
+
+/**
+ * @brief           Настроить тактирование ADC
+ */
+static void rcc_setup_adc(void)
+{
+    /* Делитель ADC = /6 (72MHz / 6 = 12MHz) */
+    MODIFY_REG(RCC->CFGR,
+               RCC_CFGR_ADCPRE_Msk,
+               0x02 << RCC_CFGR_ADCPRE_Pos);
+}
+/* ------------------------------------------------------------------------- */
+
+/**
+ * @brief           Настроить тактирование USB
+ */
+static void rcc_setup_usb(void)
+{
+    /* Делитель USB = /1.5 (72MHz / 1.5 = 48MHz) */
+    CLEAR_BIT(RCC->CFGR, RCC_CFGR_USBPRE_Msk);
 }
 /* ------------------------------------------------------------------------- */
 

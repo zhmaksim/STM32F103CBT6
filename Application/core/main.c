@@ -24,7 +24,9 @@
 #include "rcc.h"
 #include "afio.h"
 #include "gpio.h"
+#include "adc.h"
 #include "led.h"
+#include "sensors.h"
 
 /* Private macros ---------------------------------------------------------- */
 
@@ -77,15 +79,14 @@ static void app_main(void * arg)
     static const TickType_t frequency = pdMS_TO_TICKS(1000);
 
     /* INIT CODE BEGIN ----------------------------------------------------- */
-
+    sensors_init();
+    led_on(LED_BLUE);
     /* INIT CODE END ------------------------------------------------------- */
 
     TickType_t last_wake_time = xTaskGetTickCount();
 
     while (true) {
         vTaskDelayUntil(&last_wake_time, frequency);
-
-        led_toggle(LED_BLUE);
 
         /* Обновить информацию об используемой памяти FreeRTOS */
         free_heap_size = xPortGetFreeHeapSize();
@@ -112,6 +113,7 @@ static void setup_hardware(void)
     systick_init(RCC_CPU_CLOCK);
     afio_init();
     gpio_init();
+    adc_init();
 }
 /* ------------------------------------------------------------------------- */
 
