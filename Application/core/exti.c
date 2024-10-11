@@ -17,10 +17,7 @@
 
 /* Includes ---------------------------------------------------------------- */
 
-#include "stm32f103xb_it.h"
-#include "systick.h"
-#include "pwr.h"
-#include "sensors.h"
+#include "exti.h"
 
 /* Private macros ---------------------------------------------------------- */
 
@@ -32,61 +29,31 @@
 
 /* Private function prototypes --------------------------------------------- */
 
+static void exti_pvd_init(void);
+
 /* Private user code ------------------------------------------------------- */
 
-void NMI_Handler(void)
+/**
+ * @brief           Инициализировать EXTI
+ */
+void exti_init(void)
 {
-    error();
+    exti_pvd_init();
 }
 /* ------------------------------------------------------------------------- */
 
-void HardFault_Handler(void)
+/**
+ * @brief           Инициализировать EXTI PVD
+ */
+static void exti_pvd_init(void)
 {
-    error();
-}
-/* ------------------------------------------------------------------------- */
+    /* Разрешить прерывание EXTI PVD */
+    SET_BIT(EXTI->IMR, EXTI_IMR_MR16_Msk);
 
-void MemManage_Handler(void)
-{
-    error();
-}
-/* ------------------------------------------------------------------------- */
+    /* Включить Rising Trigger */
+    SET_BIT(EXTI->RTSR, EXTI_RTSR_TR16_Msk);
 
-void BusFault_Handler(void)
-{
-    error();
-}
-/* ------------------------------------------------------------------------- */
-
-void UsageFault_Handler(void)
-{
-    error();
-}
-/* ------------------------------------------------------------------------- */
-
-void SysTick_Handler(void)
-{
-    systick_it_handler();
-}
-/* ------------------------------------------------------------------------- */
-
-void systick_period_elapsed_callback(void)
-{
-    /* Обработать системный таймер FreeRTOS */
-    if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) {
-        xPortSysTickHandler();
-    }
-}
-/* ------------------------------------------------------------------------- */
-
-void PVD_IRQHandler(void)
-{
-    pwr_pvd_it_handler();
-}
-/* ------------------------------------------------------------------------- */
-
-void DMA1_Channel1_IRQHandler(void)
-{
-    sensors_dma_it_handler();
+    /* Включить Falling Trigger */
+    SET_BIT(EXTI->FTSR, EXTI_FTSR_TR16_Msk);
 }
 /* ------------------------------------------------------------------------- */

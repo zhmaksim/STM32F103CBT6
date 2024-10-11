@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PWR_H_
-#define PWR_H_
+#ifndef EXTI_H_
+#define EXTI_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,11 +36,7 @@ extern "C" {
 
 /* Exported function prototypes -------------------------------------------- */
 
-void pwr_init(void);
-
-void pwr_pvd_it_handler(void);
-
-bool pwr_vdd_is_lower(void);
+void exti_init(void);
 
 /* Exported callback function prototypes ----------------------------------- */
 
@@ -48,4 +44,4 @@ bool pwr_vdd_is_lower(void);
 }
 #endif /* __cplusplus */
 
-#endif /* _H_ */
+#endif /* EXTI_H_ */

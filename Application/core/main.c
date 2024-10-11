@@ -24,6 +24,7 @@
 #include "rcc.h"
 #include "afio.h"
 #include "gpio.h"
+#include "exti.h"
 #include "adc.h"
 #include "led.h"
 #include "sensors.h"
@@ -113,6 +114,7 @@ static void setup_hardware(void)
     systick_init(RCC_CPU_CLOCK);
     afio_init();
     gpio_init();
+    exti_init();
     adc_init();
 }
 /* ------------------------------------------------------------------------- */

@@ -48,6 +48,8 @@ void UsageFault_Handler(void);
 
 void SysTick_Handler(void);
 
+void PVD_IRQHandler(void);
+
 void DMA1_Channel1_IRQHandler(void);
 
 /* Exported callback function prototypes ----------------------------------- */

@@ -27,9 +27,13 @@
 
 /* Private variables ------------------------------------------------------- */
 
+static bool vdd_is_lower;
+
 /* Private function prototypes --------------------------------------------- */
 
 static void pwr_disable_backup_protect(void);
+
+static void pwr_setup_pvd(void);
 
 /* Private user code ------------------------------------------------------- */
 
@@ -42,6 +46,11 @@ void pwr_init(void)
     SET_BIT(RCC->APB1ENR, RCC_APB1ENR_PWREN_Msk);
 
     pwr_disable_backup_protect();
+    pwr_setup_pvd();
+
+    /* Настроить NVIC */
+    NVIC_SetPriority(PVD_IRQn, 5);
+    NVIC_EnableIRQ(PVD_IRQn);
 }
 /* ------------------------------------------------------------------------- */
 
@@ -51,5 +60,49 @@ void pwr_init(void)
 static void pwr_disable_backup_protect(void)
 {
     SET_BIT(PWR->CR, PWR_CR_DBP_Msk);
+}
+/* ------------------------------------------------------------------------- */
+
+/**
+ * @brief           Настроить PVD
+ */
+static void pwr_setup_pvd(void)
+{
+    MODIFY_REG(PWR->CR,
+               PWR_CR_PVDE_Msk
+             | PWR_CR_PLS_Msk,
+               PWR_CR_PVDE_Msk              /* Включить PVD */
+             | 0x07 << PWR_CR_PLS_Pos);     /* Настроить уровень PVD = 2.9V */
+}
+/* ------------------------------------------------------------------------- */
+
+/**
+ * @brief           Обработать прерывание PWR PVD
+ */
+void pwr_pvd_it_handler(void)
+{
+    /* Проверить статус прерывания EXTI */
+    if (READ_BIT(EXTI->PR, EXTI_PR_PR16_Msk)) {
+        /* Сбросить статус EXTI */
+        SET_BIT(EXTI->PR, EXTI_PR_PR16_Msk);
+
+        /* Обновить состояние VDD */
+        if (READ_BIT(PWR->CSR, PWR_CSR_PVDO_Msk)) {
+            vdd_is_lower = true;
+        } else {
+            vdd_is_lower = false;
+        }
+    }
+}
+/* ------------------------------------------------------------------------- */
+
+/**
+ * @brief           Проверить состояние VDD
+ *
+ * @return          Состояние VDD
+ */
+inline bool pwr_vdd_is_lower(void)
+{
+    return vdd_is_lower;
 }
 /* ------------------------------------------------------------------------- */
