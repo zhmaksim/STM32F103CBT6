@@ -21,6 +21,7 @@
 #include "systick.h"
 #include "pwr.h"
 #include "sensors.h"
+#include "w25q.h"
 
 /* Private macros ---------------------------------------------------------- */
 
@@ -88,5 +89,17 @@ void PVD_IRQHandler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
     sensors_dma_it_handler();
+}
+/* ------------------------------------------------------------------------- */
+
+void DMA1_Channel2_IRQHandler(void)
+{
+    w25q_spi_dma_rx_it_handler();
+}
+/* ------------------------------------------------------------------------- */
+
+void DMA1_Channel3_IRQHandler(void)
+{
+    w25q_spi_dma_tx_it_handler();
 }
 /* ------------------------------------------------------------------------- */

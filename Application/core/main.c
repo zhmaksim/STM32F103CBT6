@@ -26,8 +26,10 @@
 #include "gpio.h"
 #include "exti.h"
 #include "adc.h"
+#include "spi.h"
 #include "led.h"
 #include "sensors.h"
+#include "w25q.h"
 
 /* Private macros ---------------------------------------------------------- */
 
@@ -81,6 +83,7 @@ static void app_main(void * arg)
 
     /* INIT CODE BEGIN ----------------------------------------------------- */
     sensors_init();
+    w25q_init();
     led_on(LED_BLUE);
     /* INIT CODE END ------------------------------------------------------- */
 
@@ -116,6 +119,7 @@ static void setup_hardware(void)
     gpio_init();
     exti_init();
     adc_init();
+    spi_init();
 }
 /* ------------------------------------------------------------------------- */
 

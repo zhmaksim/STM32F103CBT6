@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STM32F103XB_IT_H_
-#define STM32F103XB_IT_H_
+#ifndef SPI_H_
+#define SPI_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,31 +30,24 @@ extern "C" {
 
 /* Exported constants ------------------------------------------------------ */
 
+#define SPI_EV_TX_RX_CPLT_Pos           1
+#define SPI_EV_TX_RX_CPLT_Msk           (0x01 << SPI_EV_TX_RX_CPLT_Pos)
+#define SPI_EV_TX_RX_CPLT               SPI_EV_TX_RX_CPLT_Msk
+
+#define SPI_EV_ERR_Pos                  7
+#define SPI_EV_ERR_Msk                  (0x01 << SPI_EV_ERR_Pos)
+#define SPI_EV_ERR                      SPI_EV_ERR_Msk
+
 /* Exported types ---------------------------------------------------------- */
 
 /* Exported variables ------------------------------------------------------ */
 
+extern SemaphoreHandle_t spi1_mutex;
+extern EventGroupHandle_t spi1_event_group;
+
 /* Exported function prototypes -------------------------------------------- */
 
-void NMI_Handler(void);
-
-void HardFault_Handler(void);
-
-void MemManage_Handler(void);
-
-void BusFault_Handler(void);
-
-void UsageFault_Handler(void);
-
-void SysTick_Handler(void);
-
-void PVD_IRQHandler(void);
-
-void DMA1_Channel1_IRQHandler(void);
-
-void DMA1_Channel2_IRQHandler(void);
-
-void DMA1_Channel3_IRQHandler(void);
+void spi_init(void);
 
 /* Exported callback function prototypes ----------------------------------- */
 
@@ -62,4 +55,4 @@ void DMA1_Channel3_IRQHandler(void);
 }
 #endif /* __cplusplus */
 
-#endif /* STM32F103XB_IT_H_ */
+#endif /* SPI_H_ */
